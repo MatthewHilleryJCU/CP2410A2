@@ -3,7 +3,7 @@
 Contains the definition of the GameTree class.
 This file forms part of the assessment for CP2410 Assignment 2
 
-************** ENTER YOUR NAME HERE ****************************
+************** Matthew Hillery ****************************
 
 """
 from connect3board import Connect3Board
@@ -24,15 +24,38 @@ class GameTree:
             self._gameboard = gameboard
             self._children = [None] * self._gameboard.get_columns()
 
-            # for you to complete...
+            if self._gameboard.get_winner() is None:
+                self._create_children()
+                self._compute_score()
+            elif self._gameboard.get_winner() == gameboard.DRAW:
+                self._score = GameTree.DRAW_SCORE
+            elif self._gameboard.get_winner() == GameTree.MAX_PLAYER:
+                self._score = GameTree.MAX_WIN_SCORE
+            elif self._gameboard.get_winner() == GameTree.MIN_PLAYER:
+                self._score = GameTree.MIN_WIN_SCORE
 
         def _create_children(self):
-            # for you to complete...
-            pass
+            """ Create a child for each column """
+            for col in range(self._gameboard.get_columns()):
+                if self._gameboard.can_add_token_to_column(col):
+                    board_copy = self._gameboard.make_copy()
+                    board_copy.add_token(col)
+                    self._children[col] = GameTree._Node(board_copy)
 
         def _compute_score(self):
-            # for you to complete...
-            pass
+            """ Assign score based on which token """
+            if self._gameboard.get_whose_turn() == GameTree.MAX_PLAYER:
+                max_score = -2
+                for child in self._children:
+                    if child is not None and child._score > max_score:
+                        max_score = child._score
+                self._score = max_score
+            else:
+                min_score = 2
+                for child in self._children:
+                    if child is not None and child._score < min_score:
+                        min_score = child._score
+                self._score = min_score
 
     class _Position:
         def __init__(self, node):

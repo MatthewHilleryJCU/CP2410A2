@@ -3,7 +3,7 @@
 Contains the definition of the Connect3Board class.
 This file forms part of the assessment for CP2410 Assignment 2
 
-************** ENTER YOUR NAME HERE ****************************
+************** Matthew Hillery ****************************
 
 """
 
@@ -44,27 +44,26 @@ class Connect3Board:
         """ Returns None if the game is not complete, DRAW if no more moves can be played and there is no winner,
         or the token (O or #) that has won the game by making three-in-a-row horizontally, vertically, or diagonally."""
 
-        # this only works correctly for 3*3, you will need to implement a solution that works for larger
-        # sized boards
-        if self._rows == self._rows == 3:
-            if self._board[0][0] is not None and \
-                    (self._board[0][0] == self._board[0][1] == self._board[0][2] or
-                     self._board[0][0] == self._board[1][0] == self._board[2][0] or
-                     self._board[0][0] == self._board[1][1] == self._board[2][2]):
-                return self._board[0][0]
-            elif self._board[1][0] is not None and self._board[1][0] == self._board[1][1] == self._board[1][2]:
-                return self._board[1][0]
-            elif self._board[2][0] is not None and \
-                    (self._board[2][0] == self._board[2][1] == self._board[2][2] or
-                     self._board[2][0] == self._board[1][1] == self._board[0][2]):
-                return self._board[2][0]
-            elif self._board[0][1] is not None and self._board[0][1] == self._board[1][1] == self._board[2][1]:
-                return self._board[0][1]
-            elif self._board[0][2] is not None and self._board[0][2] == self._board[1][2] == self._board[2][2]:
-                return self._board[0][2]
-        else:
-            # implement your solution here
-            pass
+        for r in range(0, self._rows-2):
+            for c in range(0, self._cols-2):
+                if self._board[r][c] is not None and \
+                        (self._board[r][c] == self._board[r][c + 1] == self._board[r][c + 2] or
+                         self._board[r][c] == self._board[r + 1][c] == self._board[r + 2][c] or
+                         self._board[r][c] == self._board[r + 1][c + 1] == self._board[r + 2][c + 2]):
+                    return self._board[r][c]
+                elif self._board[r + 1][c] is not None and self._board[r + 1][c] == self._board[r + 1][c + 1] == \
+                        self._board[r + 1][c + 2]:
+                    return self._board[r + 1][c]
+                elif self._board[r + 2][c] is not None and \
+                        (self._board[r + 2][c] == self._board[r + 2][c + 1] == self._board[r + 2][c + 2] or
+                         self._board[r + 2][c] == self._board[r + 1][c + 1] == self._board[r][c + 2]):
+                    return self._board[r + 2][c]
+                elif self._board[r][c + 1] is not None and self._board[r][c + 1] == self._board[r + 1][c + 1] == \
+                        self._board[r + 2][c + 1]:
+                    return self._board[r][c + 1]
+                elif self._board[r][c + 2] is not None and self._board[r][c + 2] == self._board[r + 1][c + 2] == \
+                        self._board[r + 2][c + 2]:
+                    return self._board[r][c + 2]
 
         # no winner discovered, so check for draw or otherwise return None
         if self._turn_number >= self._rows * self._cols:
@@ -97,7 +96,8 @@ class Connect3Board:
         column_labels = ' ' + ''.join(str(i) for i in range(self._cols))
         rows = [column_labels]
         for row in self._board:
-            rows.append('|' + ''.join(c if c is not None else ' ' for c in row) + '|')
+            rows.append(
+                '|' + ''.join(c if c is not None else ' ' for c in row) + '|')
         rows.append('-' * (self._cols + 2))
         rows.append(column_labels)
         return '\n'.join(rows)
